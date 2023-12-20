@@ -61,7 +61,7 @@
       stackFlip.value.push(index);
     }
     if(stackFlip.value.length === 2){
-      isFliping = true;
+      isFliping.value= true;
       setTimeout(() => {
         matchCarte();
       }, 1000);
@@ -75,19 +75,25 @@
     const cart2 = deck.value[stackFlip.value[1]];
 
     if(cart1?.value === cart2?.value){
-      cart1.isMatched = true;
+      cart1.isMatched = true
       cart2.isMatched = true;
+      cart1.isFlipped = true;
+      cart2.isFlipped = true;
+      coups.value++;
     }else{
       cart1.isMatched = false;
       cart2.isMatched = false;
+      cart1.isFlipped = false;
+      cart2.isFlipped = false;
+      erreur.value++;
     }
     stackFlip.value.splice(0, stackFlip.value.length);
-    isFliping = false;
+    isFliping.value = false;
 
     console.log(deck.value);
     console.log(cart1.value);
     console.log(cart2.value);
-    this.$forceUpdate();
+
   }
   const selection = (event) => {
     difficulte.value = event.target.value;

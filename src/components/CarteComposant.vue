@@ -7,18 +7,19 @@ const props = defineProps({
   isMatched: Boolean,
 })
 
-const flipCard = () => {
-  console.log("Emission");
-}
+/*const flipCard = (carte) => {
+  const data = ref(props.isFlipped);
+  carte.isFlipped = !carte.isFlipped
+}*/
 
 onMounted(() => {
 
 });
 
 
-console.log("Value :" , ref(props.value));
+/*console.log("Value :" , ref(props.value));
 console.log("Flip : ", ref(props.isFlipped));
-console.log("Match : ", ref(props.isMatched));
+console.log("Match : ", ref(props.isMatched));*/
 
 </script>
 
@@ -27,7 +28,7 @@ console.log("Match : ", ref(props.isMatched));
   <div class="card" :class="{ flipped: isFlipped, matched: isMatched }" @click="$emit('flip')">
     <div class="card-inner">
       <div class="card-back" v-show="!isFlipped"></div>
-      <div class="card-front" v-show="isFlipped && !isMatched">{{ value }}</div>
+      <div class="card-front" v-show="(isFlipped && !isMatched) || (isFlipped && isMatched)">{{ value }}</div>
     </div>
   </div>
 
