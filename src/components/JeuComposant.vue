@@ -3,7 +3,6 @@
   import {onMounted, ref} from "vue";
   import ChronoComponent from "@/components/ChronoComposant.vue";
   import CarteComposant from "@/components/CarteComposant.vue";
-  import Carte from "@/Carte";
 
   const refCounter = ref(ChronoComponent);
   const erreur = ref(0);
@@ -54,9 +53,7 @@
   }
   const flipCard = (index) => {
     if(isFliping.value) return;
-    console.log("Test");
     if(deck.value[index].isFlipped === false && stackFlip.value.length < 2){
-      console.log("Deck : ", deck.value[index].isFlipped);
       deck.value[index].isFlipped = true;
       stackFlip.value.push(index);
     }
@@ -66,8 +63,10 @@
         matchCarte();
       }, 1000);
     }
+    if(finJeu()){
+     console.log("Jeu finis");
+    }
 
-    console.log("Stack : ", stackFlip.value);
   }
 
   const matchCarte = () => {
@@ -89,11 +88,11 @@
     }
     stackFlip.value.splice(0, stackFlip.value.length);
     isFliping.value = false;
+  }
 
-    console.log(deck.value);
-    console.log(cart1.value);
-    console.log(cart2.value);
-
+  const finJeu = () =>{
+    const nbFlipped = deck.value.filter(f => f.isFlipped);
+    return nbFlipped.length === deck.value.length;
   }
   const selection = (event) => {
     difficulte.value = event.target.value;

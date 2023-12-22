@@ -43,7 +43,7 @@ nav{
 article{
   /*width: var(--menu-size);*/
   display: inline-flex;
-  align-items: center;
+  /*align-items: center;*/
 }
 .burger{
   display: flex;
@@ -68,8 +68,9 @@ article{
   font-weight: 300;
 }
 h1{
-  margin: 0 auto;
-  /*margin: calc(50% - var(--menu-size));*/
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
   font-size: 38px;
 
 }

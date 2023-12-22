@@ -7,20 +7,6 @@ const props = defineProps({
   isMatched: Boolean,
 })
 
-/*const flipCard = (carte) => {
-  const data = ref(props.isFlipped);
-  carte.isFlipped = !carte.isFlipped
-}*/
-
-onMounted(() => {
-
-});
-
-
-/*console.log("Value :" , ref(props.value));
-console.log("Flip : ", ref(props.isFlipped));
-console.log("Match : ", ref(props.isMatched));*/
-
 </script>
 
 <template>
