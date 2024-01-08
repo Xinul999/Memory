@@ -5,9 +5,9 @@
   import CarteComposant from "@/components/CarteComposant.vue";
 
   const refCounter = ref(ChronoComponent);
-  const erreur = ref(0);
-  const coups = ref(0);
-  const difficulte = ref('facile');
+  const error = ref(0);
+  const hit = ref(0);
+  const difficulty = ref('facile');
   const grid = ref(16);
   const map = ref(new Map());
   const deck = ref([]);
@@ -18,12 +18,12 @@
      for(const val in csv){
        map.value.set(Number(val), csv[val]?.head);
      }
-    deck.value = generateCarte();
+    deck.value = generateCards();
   });
 
-  const generateDeck = (niveauDifficulte) => {
+  const generateDeck = (difficultyLevel) => {
     const tab = [];
-    while(tab.length < (niveauDifficulte/2)){
+    while(tab.length < (difficultyLevel/2)){
       const idx = Math.floor(Math.random() * map.value.size);
       const mot = map.value.get(idx);
       if(!tab.includes(mot)){
@@ -33,16 +33,16 @@
     return tab;
   }
 
-  const generateCarte = () => {
+  const generateCards = () => {
     let cards = [];
     for (const value of generateDeck(grid.value)) {
       cards.push({ value, isFlipped: false, isMatched: false });
       cards.push({ value, isFlipped: false, isMatched: false });
     }
-    cards = melange(cards);
+    cards = shuffle(cards);
     return cards;
   }
-  const melange = (array) => {
+  const shuffle = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       const temp = array[i];
@@ -52,6 +52,7 @@
     return array;
   }
   const flipCard = (index) => {
+    console.log("Enter flip card emit ", new Date());
     if(isFliping.value) return;
     if(deck.value[index].isFlipped === false && stackFlip.value.length < 2){
       deck.value[index].isFlipped = true;
@@ -60,16 +61,16 @@
     if(stackFlip.value.length === 2){
       isFliping.value= true;
       setTimeout(() => {
-        matchCarte();
-      }, 1000);
+        matchCards();
+      }, 1500);
     }
-    if(finJeu()){
-     console.log("Jeu finis");
+    if(endGame()){
+     console.log("welldone");
     }
 
   }
 
-  const matchCarte = () => {
+  const matchCards = () => {
     const cart1 = deck.value[stackFlip.value[0]];
     const cart2 = deck.value[stackFlip.value[1]];
 
@@ -78,32 +79,34 @@
       cart2.isMatched = true;
       cart1.isFlipped = true;
       cart2.isFlipped = true;
-      coups.value++;
+      hit.value++;
     }else{
       cart1.isMatched = false;
       cart2.isMatched = false;
       cart1.isFlipped = false;
       cart2.isFlipped = false;
-      erreur.value++;
+      error.value++;
     }
     stackFlip.value.splice(0, stackFlip.value.length);
     isFliping.value = false;
   }
 
-  const finJeu = () =>{
+  const endGame = () =>{
     const nbFlipped = deck.value.filter(f => f.isFlipped);
     return nbFlipped.length === deck.value.length;
   }
+
   const selection = (event) => {
-    difficulte.value = event.target.value;
+    // if
+    difficulty.value = event.target.value;
     nbCase();
     // refCounter.value?.start();
     console.log(grid.value);
-    deck.value = generateCarte();
+    deck.value = generateCards();
   }
 
   const nbCase = () => {
-    switch (difficulte.value){
+    switch (difficulty.value){
       case "facile":
         grid.value = 16;
         break;
@@ -135,9 +138,9 @@
         <!-- Chronometre -->
         <chrono-component ref="refCounter" />
         <!-- Nombre d'erreur -->
-        <span>Erreur : {{erreur}}</span>
+        <span>Erreur : {{error}}</span>
         <!-- Nombre de coups -->
-        <span>Coups : {{coups}}</span>
+        <span>Coups : {{hit}}</span>
       </div>
 
     <div class="grid" v-bind:style="{
@@ -208,13 +211,6 @@ span{
   font-weight: bold;
   font-size: 20px;
 }
-/*Bug quand on clique le data-id ne s'affiche pas */
-/*.box{
-  transition: 0.5s ease;
-}
-.box:active{
-  transform: rotateY(1turn);
-}*/
 
 .control + .grid {
   margin: 1em 0;
