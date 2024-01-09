@@ -124,6 +124,8 @@ const computeScore = () => {
 }
 const selection = (event) => {
   difficulty.value = event.target.value;
+  nbCase();
+  deck.value = generateCards();
 }
 
 const nbCase = () => {
@@ -147,7 +149,7 @@ const nbCase = () => {
 <template>
   <div class="container">
     <div class="control">
-      <!-- liste deroulante -->
+      <!-- difficulty -->
       <div>
         <select name="difficulte" @change="selection($event)">
           <option value="facile" selected>Facile</option>
@@ -156,11 +158,11 @@ const nbCase = () => {
         </select>
       </div>
       <button type="button" @click="playGame">{{ buttonPlay }}</button>
-      <!-- Chronometre -->
+      <!-- Chronometer -->
       <chrono-component ref="refCounter"/>
-      <!-- Nombre d'erreur -->
+      <!-- errors -->
       <span>Erreur : {{ error }}</span>
-      <!-- Nombre de coups -->
+      <!-- hits -->
       <span>Coups : {{ hit }}</span>
     </div>
 
