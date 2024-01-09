@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import {ref} from "vue";
 
 const interval = ref(undefined);
 const timeElapsed = ref(0);
@@ -34,7 +34,7 @@ const getElapsedTime = () => {
 
 defineExpose({
   start,
-  stop,
+  pause,
   reset,
   getElapsedTime
 });

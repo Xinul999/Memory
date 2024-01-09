@@ -54,7 +54,6 @@ const shuffle = (array) => {
   return array;
 }
 const flipCard = (index) => {
-  console.log("Enter flip card emit ", new Date());
   if(startGame.value){
     if (isFliping.value) return;
     if (deck.value[index].isFlipped === false && stackFlip.value.length < 2) {
@@ -69,9 +68,11 @@ const flipCard = (index) => {
     }
     if (endGame()) {
       buttonPlay.value = "Rejouer";
+      refCounter.value?.pause();
       computeScore();
       resetGame();
-      console.log("welldone");
+
+      // TODO animation ending game
     }
   }
 
@@ -99,6 +100,7 @@ const matchCards = () => {
   isFliping.value = false;
 }
 const playGame = () => {
+  refCounter.value?.reset();
   if (!startGame.value) {
     startGame.value = true;
     refCounter.value?.start();
@@ -113,7 +115,6 @@ const endGame = () => {
 
 const resetGame = () => {
   startGame.value = false;
-  refCounter.value?.reset();
 }
 
 const computeScore = () => {
