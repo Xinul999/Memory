@@ -36,7 +36,7 @@ defineProps({
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: opacity 3s;
+  transition: opacity 2.5s;
 }
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
