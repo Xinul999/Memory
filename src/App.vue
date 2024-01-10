@@ -1,6 +1,6 @@
 <script setup>
-import HeaderComponent from "@/components/EnteteComposant.vue";
-import GameComponent from "@/components/JeuComposant.vue";
+import HeaderComponent from "@/components/HeaderComponent.vue";
+import GameComponent from "@/components/GameComponent.vue";
 </script>
 
 <template>
@@ -11,7 +11,7 @@ import GameComponent from "@/components/JeuComposant.vue";
   </main>
 
   <footer>
-
+    <p id="score"></p>
   </footer>
 </template>
 

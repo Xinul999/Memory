@@ -72,6 +72,12 @@ h1{
   left: 50%;
   transform: translate(-50%, 0);
   font-size: 38px;
-
+}
+@media screen and (max-width: 768px) {
+  header nav h1 {
+    left: inherit;
+    transform: none;
+    right: 5%;
+  }
 }
 </style>

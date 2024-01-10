@@ -1,9 +1,10 @@
 <script setup>
 import csv from "../assets/dico.csv";
 import {onMounted, ref} from "vue";
-import ChronoComponent from "@/components/ChronoComposant.vue";
-import CarteComposant from "@/components/CarteComposant.vue";
+import ChronoComponent from "@/components/ChronoComponent.vue";
+import CardsComponent from "@/components/CardsComponent.vue";
 
+const MARK = 20;
 const refCounter = ref(ChronoComponent);
 const error = ref(0);
 const hit = ref(0);
@@ -15,6 +16,8 @@ let stackFlip = ref([]);
 let isFliping = ref(false);
 let startGame = ref(false);
 let buttonPlay = ref("Jouer");
+let reloadGame = ref(false);
+let selectState = ref(false);
 
 onMounted(() => {
   for (const val in csv) {
@@ -76,7 +79,6 @@ const flipCard = (index) => {
     }
   }
 
-
 }
 
 const matchCards = () => {
@@ -104,6 +106,9 @@ const playGame = () => {
   if (!startGame.value) {
     startGame.value = true;
     refCounter.value?.start();
+    selectState.value = true;
+  }
+  if(!reloadGame.value){
     nbCase();
     deck.value = generateCards();
   }
@@ -115,17 +120,25 @@ const endGame = () => {
 
 const resetGame = () => {
   startGame.value = false;
+  reloadGame.value = false;
+  selectState.value = false;
 }
 
 const computeScore = () => {
-  const time = refCounter.value?.getElapsedTime().value;
+  /*const time = refCounter.value?.getElapsedTime().value;
+  const paires = (grid.value/2);
+  const score = (hit.value /  paires) * MARK;
   console.log("Compute score : ");
-  console.log("Chrono : ", time);
+  console.log("Chrono : ", time);*/
 }
 const selection = (event) => {
+  reloadGame.value = true;
   difficulty.value = event.target.value;
-  nbCase();
-  deck.value = generateCards();
+  if(!startGame.value){
+    nbCase();
+    deck.value = generateCards();
+  }
+
 }
 
 const nbCase = () => {
@@ -137,7 +150,7 @@ const nbCase = () => {
       grid.value = 20;
       break;
     case "difficile":
-      grid.value = 28;
+      grid.value = 24;
       break
     default:
       grid.value = 20;
@@ -151,7 +164,7 @@ const nbCase = () => {
     <div class="control">
       <!-- difficulty -->
       <div>
-        <select name="difficulte" @change="selection($event)">
+        <select name="difficulte" @change="selection($event)" :disabled="selectState">
           <option value="facile" selected>Facile</option>
           <option value="moyen">Moyen</option>
           <option value="difficile">Difficile</option>
@@ -166,12 +179,14 @@ const nbCase = () => {
       <span>Coups : {{ hit }}</span>
     </div>
 
-    <div class="grid" v-bind:style="{
+
+    <!--div v-bind:id="difficulty" class="grid" v-bind:style="{
       gridTemplateColumns: 'repeat(' + grid/4 + ', 220px)',
       gridTemplateRows: 'repeat(' + (grid/2 - 1) + ', 80px)'
-      }">
+      }"-->
+    <div v-bind:id="difficulty" class="grid">
       <!-- Generer la grille -->
-      <CarteComposant
+      <CardsComponent
           v-for="(card, index) in deck"
           :key="index"
           v-model:value="card.value"
@@ -186,7 +201,7 @@ const nbCase = () => {
 <style scoped>
 
 .container {
-  width: 1190px;
+  max-width: 1190px;
   margin: 0 auto;
 }
 
@@ -214,12 +229,21 @@ span {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(4, 180px);
-  grid-template-rows: repeat(4, 100px);
   justify-content: center;
   gap: 6px;
 }
-
+#difficile.grid{
+  grid-template-columns: repeat(4, 220px);
+  grid-template-rows: repeat(6, 80px);
+}
+#moyen.grid{
+  grid-template-columns: repeat(4, 220px);
+  grid-template-rows: repeat(5, 80px);
+}
+#facile.grid{
+   grid-template-columns: repeat(4, 220px);
+   grid-template-rows: repeat(4, 80px);
+}
 .card {
   background-color: lightblue;
   border: 1px solid black;
@@ -238,6 +262,72 @@ span {
 
 .control + .grid {
   margin: 1em 0;
+}
+
+/*media query*/
+@media screen and (max-width: 905px) {
+   #difficile.grid, #moyen.grid, #facile.grid{
+     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+     grid-template-rows: none;
+     grid-auto-rows: 50px;
+  }
+  #difficile.grid, #moyen.grid, #facile.grid > .card{
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 810px) {
+  #moyen.grid, #facile.grid{
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-rows: none;
+    grid-auto-rows: 50px;
+  }
+}
+@media screen and (max-width: 768px) {
+  #difficile.grid, #moyen.grid, #facile.grid{
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    grid-template-rows: none;
+    grid-auto-rows: 40px;
+  }
+  #moyen.grid{
+    grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  }
+  #facile.grid{
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  #difficile.grid > .card, #moyen.grid > .card, #facile.grid > .card{
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .control > *, select{
+    padding: 5px;
+  }
+  #moyen.grid{
+    grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  }
+  #facile.grid{
+    grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  }
+  #difficile.grid > .card, #moyen.grid > .card, #facile.grid > .card{
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .control > *, select{
+    padding: 5px;
+  }
+  #moyen.grid{
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+  #facile.grid{
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+  #moyen.grid > .card, #facile.grid > .card{
+    font-size: 12px;
+  }
 }
 
 </style>
