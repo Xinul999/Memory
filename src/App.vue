@@ -10,9 +10,7 @@ import GameComponent from "@/components/GameComponent.vue";
      <game-component></game-component>
   </main>
 
-  <footer>
-    <p id="score"></p>
-  </footer>
+  <footer></footer>
 </template>
 
 /* CSS */

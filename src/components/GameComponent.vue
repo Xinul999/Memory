@@ -18,6 +18,8 @@ let startGame = ref(false);
 let buttonPlay = ref("Jouer");
 let reloadGame = ref(false);
 let selectState = ref(false);
+let timeMax = ref(0);
+let score = ref(0);
 
 onMounted(() => {
   for (const val in csv) {
@@ -111,6 +113,7 @@ const playGame = () => {
   if(!reloadGame.value){
     nbCase();
     deck.value = generateCards();
+    score.value = 0;
   }
 }
 const endGame = () => {
@@ -122,14 +125,16 @@ const resetGame = () => {
   startGame.value = false;
   reloadGame.value = false;
   selectState.value = false;
+  // score.value = 0;
 }
 
 const computeScore = () => {
-  /*const time = refCounter.value?.getElapsedTime().value;
+  const time = refCounter.value?.getElapsedTime().value;
   const paires = (grid.value/2);
-  const score = (hit.value /  paires) * MARK;
-  console.log("Compute score : ");
-  console.log("Chrono : ", time);*/
+  score.value = MARK * (hit.value /  paires) * 0.7 + (paires / error.value) * 0.2 + (time / timeMax.value) * 0.3;
+  score.value = Math.floor(score.value);
+  console.log("Compute score : ", score.value);
+  console.log("Chrono : ", time);
 }
 const selection = (event) => {
   reloadGame.value = true;
@@ -145,15 +150,19 @@ const nbCase = () => {
   switch (difficulty.value) {
     case "facile":
       grid.value = 16;
+      timeMax.value = 300; // 5 minutes
       break;
     case "moyen":
       grid.value = 20;
+      timeMax.value = 600; // 10 minutes
       break;
     case "difficile":
       grid.value = 24;
+      timeMax.value = 900; // 15 minutes
       break
     default:
       grid.value = 20;
+      timeMax.value = 300;
   }
 }
 
@@ -179,11 +188,6 @@ const nbCase = () => {
       <span>Coups : {{ hit }}</span>
     </div>
 
-
-    <!--div v-bind:id="difficulty" class="grid" v-bind:style="{
-      gridTemplateColumns: 'repeat(' + grid/4 + ', 220px)',
-      gridTemplateRows: 'repeat(' + (grid/2 - 1) + ', 80px)'
-      }"-->
     <div v-bind:id="difficulty" class="grid">
       <!-- Generer la grille -->
       <CardsComponent
@@ -195,6 +199,7 @@ const nbCase = () => {
           @flip="flipCard(index)"
       />
     </div>
+    <p>Score : {{score}}/20</p>
   </div>
 </template>
 
