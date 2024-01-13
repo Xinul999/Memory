@@ -205,9 +205,15 @@ const nbCase = () => {
 
 <style scoped>
 
+@font-face {
+  font-family: "Perfect DOS VGA 437";
+  src: url("../assets/fonts/pixel-ii.ttf") format("truetype");
+}
 .container {
   max-width: 1190px;
   margin: 0 auto;
+  font-family: 'Perfect DOS VGA 437',serif;
+  font-weight: bold;
 }
 
 .control {
@@ -227,7 +233,14 @@ const nbCase = () => {
 .control > *, select {
   padding: 10px;
 }
-
+select {
+  font-family: "Perfect DOS VGA 437", serif;
+  font-weight: bold;
+}
+button{
+  font-family: "Perfect DOS VGA 437", serif;
+  font-weight: bold;
+}
 span {
   background-color: #e8e2e2;
 }
